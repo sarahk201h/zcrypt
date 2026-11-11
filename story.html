@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zcrypt</title>
+<style>
+:root{
+  --bg:#0f1c1f; --bg2:#14272b; --ink:#f3ede2; --muted:#a9b5b0; --sand:#e2c99a;
+  --teal:#3fb6a8; --red:#e0685b; --green:#57c07d; --line:rgba(243,237,226,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:radial-gradient(1200px 800px at 75% 20%,#1b3438 0%,var(--bg) 60%);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;overflow:hidden;cursor:default}
+.ar{font-family:"Segoe UI","Noto Naskh Arabic","Geeza Pro","Arial",sans-serif;direction:rtl}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:22px 40px;z-index:5}
+.brand{font-weight:700;letter-spacing:.04em;font-size:18px}
+.brand span{color:var(--sand)}
+.tag{font-size:13px;color:var(--muted);border:1px solid var(--line);padding:6px 12px;border-radius:999px;letter-spacing:.06em;text-transform:uppercase}
+.stage{height:100%;display:grid;grid-template-columns:minmax(300px,420px) minmax(320px,640px);gap:6vw;align-items:center;justify-content:center;padding:80px 40px 90px}
+/* phone */
+.phone{width:300px;height:600px;margin:auto;border-radius:44px;background:#0a1214;border:10px solid #22363a;
+  box-shadow:0 40px 80px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.05);position:relative;overflow:hidden;transition:transform .6s, opacity .6s}
+.phone:before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#22363a;border-radius:12px;z-index:3}
+.screen{position:absolute;inset:0;padding:48px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.s-title{font-size:13px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;text-align:center}
+.doc{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;
+  opacity:0;transform:translateY(10px);transition:all .5s}
+.doc.in{opacity:1;transform:none}
+.doc i{font-style:normal;font-size:22px}
+.doc b{font-size:14px;font-weight:600;display:block}
+.doc small{font-size:11px;color:var(--muted)}
+.lock{margin-top:auto;text-align:center;font-size:13px;color:var(--teal);opacity:0;transition:opacity .6s}
+.lock.in{opacity:1}
+.bigicon{font-size:64px;text-align:center;margin-top:60px}
+.hex{font-family:Consolas,"Courier New",monospace;font-size:12px;line-height:1.6;color:#6f8f88;word-break:break-all;background:#071012;
+  border:1px solid var(--line);border-radius:12px;padding:12px}
+.crack{position:absolute;inset:0;background:
+  linear-gradient(115deg,transparent 48%,rgba(255,255,255,.5) 49%,transparent 50%),
+  linear-gradient(35deg,transparent 58%,rgba(255,255,255,.35) 59%,transparent 60%),
+  linear-gradient(160deg,transparent 38%,rgba(255,255,255,.3) 39%,transparent 40%),#050909;opacity:0;transition:opacity .4s;z-index:2}
+.crack.in{opacity:1}
+.ring{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px;justify-items:center}
+.ring .p{width:62px;height:62px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:24px;
+  background:var(--bg2);transition:all .5s}
+.ring .p.on{border-color:var(--teal);box-shadow:0 0 0 6px rgba(63,182,168,.15)}
+.ring .lbl{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.counter{text-align:center;font-size:30px;font-weight:700;color:var(--teal);margin-top:14px}
+.verify{margin-top:30px;border-radius:16px;padding:18px;background:rgba(87,192,125,.12);border:1px solid rgba(87,192,125,.5);
+  opacity:0;transform:scale(.96);transition:all .5s}
+.verify.in{opacity:1;transform:none}
+.verify h4{color:var(--green);font-size:20px;margin-bottom:8px}
+.verify.bad{background:rgba(224,104,91,.12);border-color:rgba(224,104,91,.6)}.verify.bad h4{color:var(--red)}
+.msg{background:#1f3a35;border-radius:12px 12px 12px 4px;padding:10px 12px;font-size:12.5px;line-height:1.5;color:#e9efe9;
+  opacity:0;transform:translateY(10px);transition:all .5s}
+.msg.in{opacity:1;transform:none}.msg b{font-weight:600}.msg u{text-decoration-color:var(--red);text-decoration-thickness:2px}
+.fw{color:var(--muted);font-size:10.5px;font-style:italic}
+.seal{font-family:Consolas,"Courier New",monospace;font-size:11px;color:var(--sand);margin-top:6px}
+.verify p{font-size:12.5px;color:var(--ink);line-height:1.6}
+.cert{background:#f6f0e4;color:#2b2b2b;border-radius:10px;padding:14px;font-size:12px;line-height:1.5}
+.cert b{display:block;font-size:13px;margin-bottom:4px}
+/* text */
+.copy .step{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--sand);margin-bottom:18px}
+.copy h1{font-size:clamp(34px,4.2vw,58px);line-height:1.08;font-weight:700;margin-bottom:20px}
+.copy p.en{font-size:clamp(18px,1.6vw,23px);line-height:1.5;color:#d9d3c7;max-width:34ch}
+.copy p.ar{font-size:clamp(18px,1.6vw,23px);line-height:1.7;color:var(--muted);margin-top:16px;max-width:34ch}
+.copy .note{margin-top:26px;font-size:15px;color:var(--teal)}
+.fade{animation:fade .7s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+/* footer */
+.bar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;font-size:13px;color:var(--muted)}
+.dots{display:flex;gap:8px}
+.dots b{width:28px;height:4px;border-radius:2px;background:var(--line);transition:background .3s}
+.dots b.on{background:var(--sand)}
+.hint{opacity:.7}
+@media (max-width:900px){.stage{grid-template-columns:1fr;gap:20px;overflow:auto}.phone{transform:scale(.8)}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand">ZCRYPT <span id="sub">SEAL · VAULT</span></div>
+  <div class="tag">Prototype</div>
+</div>
+
+<div class="stage">
+  <div><div class="phone" id="phone"><div class="crack" id="crack"></div><div class="screen" id="screen"></div></div></div>
+  <div class="copy" id="copy"></div>
+</div>
+
+<div class="bar">
+  <div class="dots" id="dots"></div>
+  <div class="hint">Space / → next · ← back · F full screen · P pause</div>
+</div>
+
+<script>
+const scenes = [
+ { step:"Zcrypt",
+   h:"Trust that survives<br>forwarding.",
+   en:"In a crisis, people rely on messages and documents passed hand to hand. Zcrypt lets anyone check what's real.",
+   ar:"ثقة تصمد أمام إعادة التوجيه.",
+   note:"Part 1 · Zcrypt Seal   ·   Part 2 · Zcrypt Vault",
+   phone:()=>`<div class="bigicon">🛡️</div><div class="s-title" style="margin-top:16px">Zcrypt</div>`},
+ { step:"Zcrypt Seal · 1",
+   h:"Two evacuation notices. Only one is real.",
+   en:"During a crisis, fake notices spread on WhatsApp as fast as real ones. People can't tell them apart — and the wrong one can send them into danger.",
+   ar:"في الأزمات، تنتشر الرسائل المزيفة بسرعة الرسائل الحقيقية.",
+   phone:()=>`<div class="s-title">Family group · WhatsApp</div>
+     <div class="msg"><span class="fw">↪ Forwarded</span><br><b>Relief Agency (sample):</b> Buses leave from the North School at 9:00. Bring documents.<div class="seal">⟦ZC·7Q4K-M2XP⟧</div></div>
+     <div class="msg"><span class="fw">↪ Forwarded many times</span><br><b>Relief Agency:</b> Buses leave from the Old Bridge at 9:00. Bring documents.</div>`,
+   anim:()=>stagger(".msg",700)},
+ { step:"Zcrypt Seal · 2",
+   h:"The real one carries a seal.",
+   en:"The agency signs its message once. After any number of forwards, anyone can paste it into the checker and see who sent it — and that not a word has changed.",
+   ar:"الرسالة الحقيقية تحمل ختماً رقمياً يمكن لأي شخص التحقق منه.",
+   phone:()=>`<div class="s-title">Zcrypt check</div>
+     <div class="msg in">Buses leave from the North School at 9:00. Bring documents.<div class="seal">⟦ZC·7Q4K-M2XP⟧</div></div>
+     <div class="verify" id="ver"><h4>✓ Genuine · Unchanged</h4><p>Signed by Relief Agency (sample).<br>Survived 6 forwards.</p></div>`,
+   anim:()=>setTimeout(()=>ver.classList.add("in"),1200)},
+ { step:"Zcrypt Seal · 3",
+   h:"Change one word, and it fails.",
+   en:"Someone copies the seal onto the fake message. The check fails instantly — the seal only fits the exact words it was made for.",
+   ar:"تغيير كلمة واحدة يكشف التزوير فوراً.",
+   phone:()=>`<div class="s-title">Zcrypt check</div>
+     <div class="msg in">Buses leave from the <u>Old Bridge</u> at 9:00. Bring documents.<div class="seal">⟦ZC·7Q4K-M2XP⟧</div></div>
+     <div class="verify bad" id="ver"><h4>✕ Altered · Do not trust</h4><p>This message does not match its seal.</p></div>`,
+   anim:()=>setTimeout(()=>ver.classList.add("in"),1200)},
+ { step:"Zcrypt Vault",
+   h:"Your documents.<br>In your hands.",
+   en:"When people are forced to flee, their papers are lost, destroyed — or held in someone else's database.",
+   ar:"وثائقك. بين يديك.",
+   note:"Part 2 · A story in five scenes →",
+   phone:()=>`<div class="bigicon">🔐</div><div class="s-title" style="margin-top:16px">Zcrypt Vault</div>`},
+ { step:"Zcrypt Vault · 1 · Store",
+   h:"Amal, 17, has to leave home.",
+   en:"Her school certificate, birth certificate and family record go into a vault on her own phone — locked with her passphrase.",
+   ar:"تحفظ أمل وثائقها في خزنة على هاتفها، مقفلة بكلمة سر لا يعرفها غيرها.",
+   phone:()=>`<div class="s-title">Amal's vault</div>
+     <div class="doc"><i>🎓</i><div><b>School certificate</b><small>Grade 11 · 2026</small></div></div>
+     <div class="doc"><i>📄</i><div><b>Birth certificate</b><small>Original scan</small></div></div>
+     <div class="doc"><i>👪</i><div><b>Family record</b><small>3 members</small></div></div>
+     <div class="lock">🔒 Encrypted on this phone</div>`,
+   anim:()=>stagger(".doc",450,".lock")},
+ { step:"Zcrypt Vault · 2 · Back up",
+   h:"A backup no one else can read.",
+   en:"An aid organisation keeps a locked copy. They store it — but they can't open it. If they're hacked or pressured, there is nothing to hand over.",
+   ar:"تحتفظ منظمة إغاثة بنسخة مقفلة لا تستطيع قراءتها.",
+   phone:()=>`<div class="s-title">What the organisation sees</div>
+     <div class="hex" id="hex"></div>
+     <div class="lock in" style="margin-top:10px">No name. No documents. Just noise.</div>`,
+   anim:()=>hexRain()},
+ { step:"Zcrypt Vault · 3 · Lose",
+   h:"At a crossing, her phone is broken.",
+   en:"Normally, this is where everything would be gone.",
+   ar:"ينكسر هاتفها. عادةً، هنا تضيع كل الوثائق.",
+   phone:()=>`<div class="s-title">Amal's vault</div>
+     <div class="doc in"><i>🎓</i><div><b>School certificate</b></div></div>
+     <div class="doc in"><i>📄</i><div><b>Birth certificate</b></div></div>`,
+   anim:()=>setTimeout(()=>{crack.classList.add("in");phone.style.transform="rotate(-4deg)"},900)},
+ { step:"Zcrypt Vault · 4 · Recover",
+   h:"Three people she trusts bring it back.",
+   en:"Amal chose five people. Any three together can unlock her vault on a new phone. No single person — and no office — can do it alone.",
+   ar:"ثلاثة من خمسة أشخاص تثق بهم يعيدون فتح خزنتها. لا أحد يستطيع ذلك وحده.",
+   phone:()=>`<div class="s-title">New phone · recovery</div>
+     <div class="ring">
+      ${[["👩‍🏫","Teacher"],["👵","Aunt"],["🧑‍💼","Caseworker"],["🧕","Friend"],["👨","Neighbour"]].map(p=>`<div><div class="p">${p[0]}</div><div class="lbl">${p[1]}</div></div>`).join("")}
+     </div>
+     <div class="counter" id="cnt">0 of 3</div>
+     <div class="lock" id="ok">🔓 Vault restored</div>`,
+   anim:()=>ringOn()},
+ { step:"Zcrypt Vault · 5 · Prove",
+   h:"Her new school can check it's real.",
+   en:"Even after the certificate was forwarded on WhatsApp, the registrar can confirm it is genuine and unchanged.",
+   ar:"يمكن للمدرسة الجديدة التأكد من أن الشهادة أصلية ولم تُعدَّل.",
+   phone:()=>`<div class="s-title">Registrar check</div>
+     <div class="cert"><b>School Leaving Certificate</b>Student: Amal (sample)<br>Grade 11 · 2026<br>Issuer: Ministry of Education (sample)</div>
+     <div class="verify" id="ver"><h4>✓ Genuine · Unchanged</h4><p>Signed by the issuing school.<br>Checked offline, in seconds.</p></div>`,
+   anim:()=>setTimeout(()=>ver.classList.add("in"),1200)},
+ { step:"Zcrypt",
+   h:"Know what's real.<br>Keep what's yours.",
+   en:"Seal: check any message or document is genuine, even after forwarding. Vault: documents stay with the person — backed up where no one else can read them, recovered through people they trust.",
+   ar:"اعرف الحقيقي. واحتفظ بما هو لك.",
+   note:"Prototype · Looking for pilot partners — talk to us.",
+   phone:()=>`<div class="bigicon">🤝</div><div class="s-title" style="margin-top:16px">Let's pilot this together</div>`}
+];
+
+let i=0, timer=null, paused=false;
+const DUR=[7000,9000,9000,9000,7000,9000,9000,7000,10000,9000,10000];
+const $=s=>document.querySelector(s);
+const dots=$("#dots"); scenes.forEach(()=>dots.appendChild(document.createElement("b")));
+
+function render(){
+  const s=scenes[i];
+  crack.classList.remove("in"); phone.style.transform="";
+  $("#screen").innerHTML=s.phone();
+  $("#copy").innerHTML=`<div class="fade"><div class="step">${s.step}</div><h1>${s.h}</h1><p class="en">${s.en}</p><p class="ar">${s.ar}</p>${s.note?`<div class="note">${s.note}</div>`:""}</div>`;
+  [...dots.children].forEach((d,k)=>d.classList.toggle("on",k<=i));
+  if(s.anim) s.anim();
+  schedule();
+}
+function schedule(){clearTimeout(timer); if(!paused) timer=setTimeout(()=>go(1),DUR[i]);}
+function go(d){i=(i+d+scenes.length)%scenes.length;render();}
+function stagger(sel,ms,after){document.querySelectorAll(sel).forEach((el,k)=>setTimeout(()=>el.classList.add("in"),400+k*ms));
+  if(after) setTimeout(()=>$(after).classList.add("in"),400+document.querySelectorAll(sel).length*ms+200);}
+function hexRain(){const h=$("#hex");let n=0;const c="0123456789abcdef";
+  const t=setInterval(()=>{if(!h.isConnected||n>520){clearInterval(t);return}
+  for(let k=0;k<12;k++)h.textContent+=c[Math.random()*16|0];n+=12;},40);}
+function ringOn(){const ps=document.querySelectorAll(".ring .p");[0,1,2].forEach((k,j)=>setTimeout(()=>{
+  if(!ps[k].isConnected)return;ps[k].classList.add("on");$("#cnt").textContent=`${j+1} of 3`;
+  if(j===2){setTimeout(()=>$("#ok")&&$("#ok").classList.add("in"),500)}},900+j*1300));}
+
+const crack=$("#crack"), phone=$("#phone");
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();go(1)}
+  else if(e.key==="ArrowLeft")go(-1);
+  else if(e.key.toLowerCase()==="f"){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+  else if(e.key.toLowerCase()==="p"){paused=!paused;schedule();document.querySelector(".tag").textContent=paused?"Paused":"Prototype"}
+});
+document.addEventListener("click",()=>go(1));
+render();
+</script>
+</body>
+</html>
